@@ -159,7 +159,17 @@ def get_query_children(query_groups, query_number):
 	
 def get_mentions_query_URL(start_date,end_date,project_id,query_id,access_token,fullText):
 	'''
+	start_date {string: "2013-10-30"}
+	end_date {string: "2015-10-30"}
+	project_id {int: number of your project}
+	query_id {int: number of your query}
+	access_token {string}
+	
+	fullText {boolian: true will retrun the full text of the mention in a much larger json file
+	
 	request_URL = get_mentions_query_URL(start_date,end_date,project_id,query_id,access_token,fullText)
+	
+	returns {string: http}
 	'''
 	query_def = "data/mentions" 
 	end_date = "endDate=" + end_date + "T00:00:00.000Z"
@@ -172,7 +182,15 @@ def get_mentions_query_URL(start_date,end_date,project_id,query_id,access_token,
 
 def get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query_id,access_token):
 	'''
-	project_json = get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query_id,access_token)
+	start_date {string: "2013-10-30"}
+	end_date {string: "2015-10-30"}
+	project_id {int: number of your project}
+	query_id {int: number of your query}
+	access_token {string}
+	
+	myJson = get_volume_data(start_date,end_date,demension_1,demension_2,project_id,query_id,access_token)
+	
+	returns {string: http}
 	'''
 	query_def = "data/volume/" + query_type1 + "/" + query_type2 + "/"
 	end_date = "?endDate=" + end_date
