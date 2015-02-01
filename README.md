@@ -1,8 +1,7 @@
-# brandy.py
-
 brandy.py: A Python Library for Brandwatch
 Brandwatch has a very powerful API that can get you a lot more data than you can usually scrape from social media’s open APIs such as Facebook and Twitter. The API and Brandwatch’s dashboard tool really work well together to allow my team to collect and synthesize huge volumes of data. Because I use the API a lot, I made a series of time saving functions to get me where I am going more quickly. These libraries should give you a good head start on your Brandwatch data projects. 
 In Python, I use Pandas and Numpy every day. These two together replace almost everything that I enjoy about R’s vector system. 
+
 brandy.py has the following dependencies:
 import requests
 import json
@@ -49,3 +48,28 @@ subqueries = get_query_children(query_groups, query_id)
 
 You will see that ‘queries’ in query_groups is a dict of queries by id. You can pull out the individual queries using get_query_children(query_groups, query_id) in order to pull out a specific query. Note that, in the context of the API, Brandwatch considers a ‘channel’ and a ‘query’ as pretty much the same thing. 
 
+When you are getting rows of mentions, each mention has a column ‘categories’ and ‘tags’ that contain an array of ids that are attributed to each mention. The rules, category and tags functions will give you the needed list of those ids. 
+
+rules = get_rules(project_id,access_token)
+categories = get_categories(project_id,access_token)
+tags = cat_tags(categories,cat_name)
+
+Querying data:
+
+Once you have the access token, project id, query id, start date and end date you can pull data in any format. I have broken this process into two functions: the first will concatenate all of these items into a single http string. The second will send that string to newapi.brandwatch.com and return the json file. Because different queries have very different hierarchy structures I return the raw json and then convert it to a Pandas DataFrame in my own code. 
+
+request_URL = get_mentions_query_URL('2013-10-30', '2015-10-30',project_id,query_id,access_token,False)
+
+Then send the request via:
+
+myJson = get_mentions_data(request_URL)
+
+Most of my queries have the two functions nested together:
+
+myJson = get_mentions_data(get_mentions_query_URL('2013-10-30', '2015-10-30',project_id, query_ids[n],access_token,False))
+
+It can often be wasteful of time and bandwidth to make too many mention queries. I strongly recommend making aggregated queries whenever possible. Brandwatch makes it possible to break down the data in an amazing number of ways that will save you a lot of local processing time.  Using the get_volume_data function you can specify the dimensions that you want and the returned json file will have the data that you are looking for. 
+
+myJson = get_volume_data(start_date,end_date,demension_1, demension_2 ,project_id,query_id,access_token)
+
+The full list of dimensions is available in the Brandwatch API User’s Guide.
