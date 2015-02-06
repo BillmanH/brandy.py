@@ -1,3 +1,7 @@
+From @tahzoo 
+http://blog.tahzoo.com/tech-thursday-brandy-py-a-python-library-for-brandwatch/
+
+
 brandy.py: A Python Library for Brandwatch
 Brandwatch has a very powerful API that can get you a lot more data than you can usually scrape from social media’s open APIs such as Facebook and Twitter. The API and Brandwatch’s dashboard tool really work well together to allow my team to collect and synthesize huge volumes of data. Because I use the API a lot, I made a series of time saving functions to get me where I am going more quickly. These libraries should give you a good head start on your Brandwatch data projects. 
 In Python, I use Pandas and Numpy every day. These two together replace almost everything that I enjoy about R’s vector system. 
