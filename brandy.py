@@ -27,7 +27,7 @@ def get_new_key(login_name, login_password):
 	response = requests.post(request_string)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Aquire key: success")
+		print ("Acquire key: success")
 	else:
 		print "Something went wrong"
 		print response.status_code
@@ -94,7 +94,7 @@ def get_rules(project_id,access_token):
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Aquire key: success")
+		print ("Acquire key: success")
 	else:
 		print "Something went wrong"
 		print response.status_code
@@ -116,7 +116,7 @@ def get_categories(project_id,access_token):
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Aquire key: success")
+		print ("Acquire key: success")
 	else:
 		print "Something went wrong"
 		print response.status_code
@@ -201,7 +201,7 @@ def get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Aquire key: success")
+		print ("Acquire key: success")
 	else:
 		print response.text
 		print request_URL
@@ -223,7 +223,7 @@ def channel_query(query_def,start_date,end_date,project_id,query_id,access_token
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Aquire key: success")
+		print ("Acquire key: success")
 	else:
 		print response.text
 	project_json = json.loads(response.text)
