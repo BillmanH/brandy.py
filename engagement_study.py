@@ -139,7 +139,7 @@ def add_response_time(DF):
 
 studyDF2 = add_response_time(negative_posts)
 mentioned_by_name = studyDF2[studyDF2['Responded']]
-Rachels_convo = subset[subset['author'].values=='<specific_name_to_study>']
+specific_convo = subset[subset['author'].values=='<specific_name_to_study>']
 
 studyDF2 = studyDF2[['author', 'facebookAuthorId','threadId','threadCreated','date','avatarUrl','url','engagement',
 	'facebookComments', 'facebookLikes', 'facebookRole',
