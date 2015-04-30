@@ -1,5 +1,5 @@
 #Brandwatch Functions
-#William Harding 1/21/2015
+#William Harding 3/24/2015
 #billh@tahzoo.com
 #http://tahzoo.com/
 
@@ -27,7 +27,7 @@ def get_new_key(login_name, login_password):
 	response = requests.post(request_string)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Acquire key: success")
+		print ("Aquire key: success")
 	else:
 		print "Something went wrong"
 		print response.status_code
@@ -53,6 +53,9 @@ def get_key_from_file(file_path):
 	return access_token
 
 def list_projects(access_token):
+	'''
+	project_list = list_projects(access_token)
+	'''	
 	request_URL = "https://newapi.brandwatch.com/projects?access_token=" + str(access_token)
 	response = requests.get(request_URL)
 	if response.status_code == 200:
@@ -90,11 +93,11 @@ def get_rules(project_id,access_token):
 	rules = get_rules(project_id,access_token)
 	https://newapi.brandwatch.com/projects/{project_id}/rules?access_token={access_token}
 	'''
-	request_URL = r"https://newapi.brandwatch.com/projects/" + project_id + r"/" + r"rules?access_token=" + access_token
+	request_URL = r"https://newapi.brandwatch.com/projects/" + str(project_id) + r"/" + r"rules?access_token=" + access_token
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Acquire key: success")
+		print ("Aquire key: success")
 	else:
 		print "Something went wrong"
 		print response.status_code
@@ -103,38 +106,47 @@ def get_rules(project_id,access_token):
 	df = pd.DataFrame(content['results'])
 	print df[['name','id']]
 	return df
-	#access_token = response_codes['access_token']
 	
-def get_categories(project_id,access_token):
+	
+def get_group_categories(project_id,access_token):
 	'''
-	categories = get_categories(project_id,access_token)
+	category_groups = get_group_categories(project_id,access_token)
 	categories[categories['name']=='name'].values  #will give you a list of categories for that group. 
 
 	https://newapi.brandwatch.com/projects/{project_id}/categories?access_token={access_token}
 	'''
-	request_URL = r"https://newapi.brandwatch.com/projects/" + project_id + r"/" + r"categories?access_token=" + access_token
+	request_URL = r"https://newapi.brandwatch.com/projects/" + str(project_id) + r"/" + r"categories?access_token=" + access_token
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Acquire key: success")
+		pass
 	else:
-		print "Something went wrong"
 		print response.status_code
 		print response.text
 	content = json.loads(response.text)
 	df = pd.DataFrame(content.get('results'))
 	print df[['name','id']]
 	return df
-	#access_token = response_codes['access_token']
 
-def cat_tags(df,cat_name):
+
+def get_category_children(category_groups,cat_name):
 	'''
-	tags = cat_tags(categories,cat_name)
+	categories = get_category_children(category_groups,cat_name)
 	'''
-	df1 = pd.DataFrame(df[df['name']==cat_name].children.reset_index(drop=True)[0])
+	df1 = pd.DataFrame(category_groups[category_groups['name']==cat_name].children.reset_index(drop=True)[0])
 	return df1
 
-
+def get_tags(project_id,access_token):
+	'''
+	tag_list = get_tags(project_id,access_token)
+	'''
+	request_URL = "https://newapi.brandwatch.com/projects/" + str(project_id) + "/tags?access_token=" + access_token
+	response = requests.get(request_URL)
+	myList = json.loads(response.text)
+	myList_df = pd.DataFrame(myList['results'])
+	print myList_df
+	return myList_df
+	
 def get_query_group_ids(project_id,access_token):
 	'''
 	query_groups = get_query_group_id(project_id,access_token)
@@ -146,7 +158,7 @@ def get_query_group_ids(project_id,access_token):
 	project_json = json.loads(response.text)
 	project_summary = pd.DataFrame(project_json['results'])
 	print project_summary
-	return project_summary	
+	return project_summary
 
 def get_query_children(query_groups, query_number):
 	'''
@@ -201,7 +213,7 @@ def get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Acquire key: success")
+		print ("Aquire key: success")
 	else:
 		print response.text
 		print request_URL
@@ -210,7 +222,6 @@ def get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query
 	#data_time_volume = pd.DataFrame(query_volume[0]['values'])
 	return project_json
 
-		
 def channel_query(query_def,start_date,end_date,project_id,query_id,access_token):
 	'''
 	project_json = channel_query(query_def,start_date,end_date,project_id,query_id,access_token)
@@ -223,7 +234,7 @@ def channel_query(query_def,start_date,end_date,project_id,query_id,access_token
 	response = requests.get(request_URL)
 	print (response.status_code)
 	if response.status_code == 200:
-		print ("Acquire key: success")
+		print ("Aquire key: success")
 	else:
 		print response.text
 	project_json = json.loads(response.text)
@@ -252,18 +263,21 @@ def iso_to_epoch(isoTime):
 	
 	epochTime = iso_to_epoch(isoTime)
 	"""
-	epochTime = time.mktime(time.strptime(isoTime, '%Y-%m-%dT%H:%M:%SZ'))
+	if "" in isoTime:
+		isoTime = isoTime.replace(r".000+0000","Z")	
+	pattern = '%Y-%m-%dT%H:%M:%SZ'
+	epochTime = time.mktime(time.strptime(isoTime, pattern))
 	return epochTime
 	
-def epoch_to_iso(epochTime):
+def epoch_to_iso(epochTime,pattern='%Y-%m-%dT%H:%M:%SZ'):
 	"""
-	isoTime = epoch_to_iso(epochTime)
+	isoTime = epoch_to_iso(epochTime,[option to put your own pattern])
 	isoTime = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(epochTime))
 	"""
-	isoTime = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(epochTime))
+	isoTime = time.strftime(pattern, time.gmtime(epochTime))
 	return isoTime
 	
-def add_epoch_date(data, column):
+def add_epoch_date(data, column='date'):
 	"""
 	data {the pandas dataframe that contains an ISO datestamp}
 	column {string: the column name that contains your ISO datestamp}
@@ -272,13 +286,15 @@ def add_epoch_date(data, column):
 	data = add_epoch_date(data, 'column')
 	"""
 	for row in range(len(data)):
+		if r"+0000" in data.loc[row, column]:
+			data.loc[row, column] = data.loc[row, column].replace(r".000+0000","Z")
 		data.loc[row, 'epoch'] = iso_to_epoch(data.loc[row, column])
 	data = data.sort('epoch').reset_index()
 	return data
 	
 def boot_brandy(file_path):
 	"""
-	call: project_list, access_token = boot_api()
+	call: project_list, access_token = boot_brandy()
 	
 	returns:
 	project_list {pandas file contain}
@@ -308,8 +324,8 @@ def brandwatch():
 	query_ids = query_list['id'].values
 	
 	rules = get_rules(project_id,access_token)
-	categories = get_categories(project_id,access_token)
-	tags = cat_tags(categories,cat_name)
+	category_groups = get_group_categories(project_id,access_token)
+	categories = get_category_children(category_groups,cat_name)
 
 	request_URL = get_mentions_query_URL(start_date,end_date,project_id,query_id,access_token,fullText)
 	project_json = get_volume_data(start_date,end_date,query_type1,query_type2,project_id,query_id,access_token)
@@ -323,6 +339,6 @@ def brandwatch():
 	print "today_date = time.strftime('%Y-%m-%dT%H:%M:%S')"
 	print ""
 	print "query_groups = get_query_group_id(project_id,access_token)"
-	print "project_list, access_token = boot_api()"
+	print "project_list, access_token = boot_brandy()"
 	
 	
