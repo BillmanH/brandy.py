@@ -164,6 +164,6 @@ data.to_excel(writer,'data',index =False,encoding='utf-8', na_rep='NA')
 studyDF2.to_excel(writer,'Negative_mentions',index =False,encoding='utf-8', na_rep='NA')
 mentioned_by_name.to_excel(writer,'Owner_responses',index =False,encoding='utf-8', na_rep='NA')
 studyDF.to_excel(writer,'conversation_overview',encoding='utf-8', na_rep='NA')
-Rachels_convo.to_excel(writer,'Example_Rachel',index =False,encoding='utf-8', na_rep='NA')
+Rachels_convo.to_excel(writer,'Example_conversation',index =False,encoding='utf-8', na_rep='NA')
 writer.save()
 
