@@ -112,9 +112,44 @@ get_categories <- function(project_id,access_token){
 	return(x.df)
 }
 
+#example date strings for reference
+start_query_date = "2015-10-12T00:00:00Z"  #happens before end date
+end_query_date = "2015-11-12T00:00:00Z" #happens after start date
+
+get_volume_data <- function(project_id,query_id,start_query_date,end_query_date,access_token){
+  #volume_df = get_volume_data(project_id,query_id,start_query_date,end_query_date,access_token)
+  htpargs <- paste("access_token=",access_token,
+                   "&startDate=",start_query_date,
+                   "&endDate=", end_query_date,
+                   "&queryId=", toString(query_id),
+                   sep = '')
+  request_URL <- paste("https://newapi.brandwatch.com",
+                       "/projects/", project_id,
+                       "/data/volume/queries/days/?", htpargs, sep = '')
+  x <- fromJSON(file=request_URL, method='C')$results
+  x.df = data.frame(do.call(rbind,x[[1]]$data))
+  return(x.df)
+}
+
+
+get_mentions_data <- function(project_id,query_id,start_query_date,end_query_date,access_token){
+	#Mentions_df = get_mentions_data(project_id,query_id,start_query_date,end_query_date,access_token)
+	htpargs <- paste("access_token=",access_token,
+				   "&startDate=",start_query_date,
+				   "&endDate=", end_query_date,
+				   "&queryId=", toString(query_id),
+				   "&pageSize=5000",
+				   sep = '')
+	request_URL <- paste("https://newapi.brandwatch.com",
+                       "/projects/", project_id,
+                       "/data/mentions/fulltext?", htpargs, sep = '')
+  x.df = data.frame(do.call(rbind,x))
+  return(x.df)
+}
 
 access_token <- get_new_key("me@tahzoo.com","1234")
 project_list <- list_projects(access_token)
 
 project_id <- project_list[project_list$name == "Money Mindstates",]$id[[1]]
+
 
